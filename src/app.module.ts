@@ -1,6 +1,7 @@
 import AppConfigs from './app.configs';
 
 import { Module } from '@nestjs/common';
+import { PrismaModule } from '@app/database';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -10,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       load: [AppConfigs],
     }),
+    PrismaModule,
   ],
 })
 export class AppModule {}
