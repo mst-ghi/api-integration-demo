@@ -3,7 +3,8 @@ import { InjectQueue } from '@nestjs/bull';
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { IJobProviderOne, IJobProviderOneTransformed } from './providers.type';
+
+import { IJobProviderOne, IJobTransformed, ProviderContract } from './providers.type';
 
 @Injectable()
 export class ProviderOneService {
@@ -18,10 +19,9 @@ export class ProviderOneService {
     name: 'provider-one',
   })
   async handler() {
-    this.logger.debug('Jobs provider one');
     const jobs = await this.fetcher();
     for (let idx = 0; idx < jobs.length; idx++) {
-      const job = this.parseResponseJob(jobs[idx]);
+      const job = this.parser(jobs[idx]);
       this.queue.add(job);
     }
   }
@@ -37,10 +37,11 @@ export class ProviderOneService {
     }
   }
 
-  parseResponseJob(job: IJobProviderOne): IJobProviderOneTransformed {
+  parser(job: IJobProviderOne): IJobTransformed {
     return {
       skills: job.skills,
       job: {
+        provider: 'provider-one',
         code: job.jobId,
         title: job.title,
         type: job.details.type,

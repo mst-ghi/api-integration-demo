@@ -59,6 +59,7 @@ model Job {
   company_id  String   @db.VarChar(64)
   salary_id   String?  @db.VarChar(64)
   location_id String?  @db.VarChar(64)
+  provider    String
   title       String
   type        String?  @db.VarChar(128)
   experience  Int?
