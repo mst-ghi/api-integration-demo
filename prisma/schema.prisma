@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Location {
+  id         String   @id @default(cuid()) @db.VarChar(64)
+  city       String?
+  state      String?
+  created_at DateTime @default(now())
+
+  jobs Job[]
+
+  @@unique([city, state])
+  @@map("locations")
+}
+
+model Salary {
+  id         String   @id @default(cuid()) @db.VarChar(64)
+  min        Int?
+  max        Int?
+  currency   String?
+  created_at DateTime @default(now())
+
+  jobs Job[]
+
+  @@map("salaries")
+}
+
+model Company {
+  id         String   @id @default(cuid()) @db.VarChar(64)
+  name       String   @unique
+  website    String?
+  industry   String?
+  created_at DateTime @default(now())
+
+  jobs Job[]
+
+  @@map("companies")
+}
+
+model Skill {
+  id         String   @id @default(cuid()) @db.VarChar(64)
+  name       String   @unique
+  created_at DateTime @default(now())
+
+  jobs Job[] @relation("job_skill")
+
+  @@map("skills")
+}
+
+model Job {
+  id          String   @id @default(cuid()) @db.VarChar(64)
+  code        String   @unique
+  company_id  String?  @db.VarChar(64)
+  salary_id   String?  @db.VarChar(64)
+  location_id String?  @db.VarChar(64)
+  provider    String
+  title       String
+  type        String?  @db.VarChar(128)
+  experience  Int?
+  remotely    Boolean? @default(false)
+  posted_at   DateTime
+  created_at  DateTime @default(now())
+
+  skills   Skill[]   @relation("job_skill")
+  company  Company?  @relation(fields: [company_id], references: [id])
+  salary   Salary?   @relation(fields: [salary_id], references: [id])
+  location Location? @relation(fields: [location_id], references: [id])
+
+  @@index([type, remotely, posted_at])
+  @@map("jobs")
+}
