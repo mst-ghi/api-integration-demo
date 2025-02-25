@@ -1,28 +1,22 @@
-import { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
-import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
+import { ProviderBase } from './provider-base.service';
 import { IJobProviderOne, IJobTransformed, ProviderContract } from './providers.type';
 
 @Injectable()
-export class ProviderOneService {
+export class ProviderOneService extends ProviderBase implements ProviderContract {
   private readonly logger = new Logger(ProviderOneService.name);
-
-  constructor(
-    @InjectQueue('jobs') private queue: Queue,
-    private readonly http: HttpService,
-  ) {}
 
   @Cron(CronExpression.EVERY_30_SECONDS, {
     name: 'provider-one',
+    disabled: process.env.PROVIDER_ONE_RUN_STATUS !== 'on',
   })
   async handler() {
     const jobs = await this.fetcher();
     for (let idx = 0; idx < jobs.length; idx++) {
       const job = this.parser(jobs[idx]);
-      this.queue.add(job);
+      this.queue.add(job, { delay: 1_000 + idx * 500 });
     }
   }
 

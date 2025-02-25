@@ -14,40 +14,44 @@ export class ProviderProcessor extends DatabaseService {
 
   @Process()
   async transcode({ data }: Job<IJobTransformed>) {
-    const job = await this.prisma.$transaction(async (tx) => {
-      const company = await this.companyQuery(tx, { company: data.company });
+    try {
+      const job = await this.prisma.$transaction(async (tx) => {
+        const company = await this.companyQuery(tx, { company: data.company });
 
-      if (company) {
-        const salary = await this.salaryQuery(tx, { salary: data.salary });
-        const location = await this.locationQuery(tx, { location: data.location });
-        const skills = await this.skillsQuery(tx, { skills: data.skills });
+        if (company) {
+          const salary = await this.salaryQuery(tx, { salary: data.salary });
+          const location = await this.locationQuery(tx, { location: data.location });
+          const skills = await this.skillsQuery(tx, { skills: data.skills });
 
-        const rawData = {
-          code: data.job.code,
-          company_id: company.id,
-          salary_id: salary?.id,
-          location_id: location?.id,
-          provider: data.job.provider,
-          title: data.job.title,
-          type: data.job.type,
-          experience: data.job.experience,
-          remotely: data.job.remotely,
-          posted_at: data.job.posted_at,
-          skills: skills ? { connect: skills?.map((s) => ({ id: s.id })) } : undefined,
-        };
+          const rawData = {
+            code: data.job.code,
+            company_id: company.id,
+            salary_id: salary?.id,
+            location_id: location?.id,
+            provider: data.job.provider,
+            title: data.job.title,
+            type: data.job.type,
+            experience: data.job.experience,
+            remotely: data.job.remotely,
+            posted_at: data.job.posted_at,
+            skills: skills ? { connect: skills?.map((s) => ({ id: s.id })) } : undefined,
+          };
 
-        return tx.job.upsert({
-          where: { code: data.job.code },
-          create: rawData,
-          update: rawData,
-        });
-      } else {
-        this.logger.warn('Company not found');
+          return tx.job.upsert({
+            where: { code: data.job.code },
+            create: rawData,
+            update: rawData,
+          });
+        } else {
+          this.logger.warn('Company not found');
+        }
+      });
+
+      if (job) {
+        this.logger.verbose(`Job processed successfully: ${data.job.code} ${job.id}`);
       }
-    });
-
-    if (job) {
-      this.logger.verbose(`Jobs processed: ${data.job.code} ${job.id}`);
+    } catch (error) {
+      this.logger.error(`Job processed failed: ${data.job.code}`);
     }
   }
 

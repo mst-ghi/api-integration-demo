@@ -1,28 +1,23 @@
-import { Queue } from 'bull';
-import { HttpService } from '@nestjs/axios';
-import { InjectQueue } from '@nestjs/bull';
+import * as dayjs from 'dayjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
+import { ProviderBase } from './provider-base.service';
 import { IJobProviderTwo, IJobTransformed, ProviderContract } from './providers.type';
 
 @Injectable()
-export class ProviderTwoService implements ProviderContract {
+export class ProviderTwoService extends ProviderBase implements ProviderContract {
   private readonly logger = new Logger(ProviderTwoService.name);
-
-  constructor(
-    @InjectQueue('jobs') private queue: Queue,
-    private readonly http: HttpService,
-  ) {}
 
   @Cron(CronExpression.EVERY_30_SECONDS, {
     name: 'provider-two',
+    disabled: process.env.PROVIDER_TWO_RUN_STATUS !== 'on',
   })
   async handler() {
     const jobs = await this.fetcher();
     for (let idx = 0; idx < jobs.length; idx++) {
       const job = this.parser(jobs[idx].job, jobs[idx].jobId);
-      this.queue.add(job);
+      this.queue.add(job, { delay: 1_000 + idx * 500 });
     }
   }
 
@@ -55,7 +50,7 @@ export class ProviderTwoService implements ProviderContract {
         title: job.position,
         type: 'full-time',
         experience: job.requirements.experience,
-        posted_at: job.postedDate,
+        posted_at: dayjs(job.datePosted).toISOString(),
       },
       skills: job.requirements.technologies || [],
       company: this.parseCompany(job.employer),

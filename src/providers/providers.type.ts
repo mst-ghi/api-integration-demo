@@ -34,7 +34,7 @@ export interface IJobProviderTwo {
     experience: number;
     technologies: string[];
   };
-  postedDate: string;
+  datePosted: string;
 }
 
 export interface IJobTransformed {

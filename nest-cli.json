@@ -15,6 +15,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/database/tsconfig.lib.json"
       }
+    },
+    "toolkit": {
+      "type": "library",
+      "root": "libs/toolkit",
+      "entryFile": "index",
+      "sourceRoot": "libs/toolkit/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/toolkit/tsconfig.lib.json"
+      }
     }
   }
 }

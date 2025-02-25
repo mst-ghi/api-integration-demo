@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DatabaseServiceModule, PrismaModule } from '@app/database';
 
+import { TransformProvider } from '@app/toolkit';
+
 import { JobsModule } from './jobs/jobs.module';
 import { ProvidersModule } from './providers/providers.module';
 
@@ -25,5 +27,6 @@ import { ProvidersModule } from './providers/providers.module';
     JobsModule,
     ProvidersModule,
   ],
+  providers: [TransformProvider],
 })
 export class AppModule {}

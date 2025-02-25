@@ -5,7 +5,7 @@ export const prismaPaginationQuery = (
   take?: string,
 ): { skip: number; take: number; page: number } => {
   let pageNum = 1;
-  let takeNum = 25;
+  let takeNum = 10;
 
   try {
     if (page) {
