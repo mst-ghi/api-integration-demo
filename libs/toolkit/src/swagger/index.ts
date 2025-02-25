@@ -16,7 +16,7 @@ export class SwaggerStarter {
         config.setDescription(`BaseURL: <strong>${baseUrl}</strong>`).addServer(baseUrl);
       }
 
-      config.setTitle(`Jobs APIs`).setVersion('1.0').addBearerAuth();
+      config.setTitle(`Jobs APIs`).setVersion('1.0');
 
       const document = SwaggerModule.createDocument(app, config.build(), options);
 
