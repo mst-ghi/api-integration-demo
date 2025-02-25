@@ -42,9 +42,11 @@ CREATE TABLE "skills" (
 -- CreateTable
 CREATE TABLE "jobs" (
     "id" VARCHAR(64) NOT NULL,
+    "code" TEXT NOT NULL,
     "company_id" VARCHAR(64) NOT NULL,
     "salary_id" VARCHAR(64),
     "location_id" VARCHAR(64),
+    "provider" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "type" VARCHAR(128),
     "experience" INTEGER,
@@ -64,7 +66,16 @@ CREATE TABLE "_job_skill" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "locations_city_state_key" ON "locations"("city", "state");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "companies_name_key" ON "companies"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "skills_name_key" ON "skills"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "jobs_code_key" ON "jobs"("code");
 
 -- CreateIndex
 CREATE INDEX "jobs_type_remotely_posted_at_idx" ON "jobs"("type", "remotely", "posted_at");

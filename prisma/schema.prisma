@@ -15,6 +15,7 @@ model Location {
 
   jobs Job[]
 
+  @@unique([city, state])
   @@map("locations")
 }
 
@@ -32,7 +33,7 @@ model Salary {
 
 model Company {
   id         String   @id @default(cuid()) @db.VarChar(64)
-  name       String
+  name       String   @unique
   website    String?
   industry   String?
   created_at DateTime @default(now())
@@ -54,9 +55,11 @@ model Skill {
 
 model Job {
   id          String   @id @default(cuid()) @db.VarChar(64)
+  code        String   @unique
   company_id  String   @db.VarChar(64)
   salary_id   String?  @db.VarChar(64)
   location_id String?  @db.VarChar(64)
+  provider    String
   title       String
   type        String?  @db.VarChar(128)
   experience  Int?
