@@ -49,7 +49,6 @@ export class ProviderTwoService implements ProviderContract {
   }
   parser(job: IJobProviderTwo, jobId): IJobTransformed {
     return {
-      skills: job.requirements.technologies,
       job: {
         provider: 'provider-two',
         code: jobId,
@@ -58,6 +57,7 @@ export class ProviderTwoService implements ProviderContract {
         experience: job.requirements.experience,
         posted_at: job.postedDate,
       },
+      skills: job.requirements.technologies || [],
       company: this.parseCompany(job.employer),
       location: this.parseLocation(job.location),
       salary: this.parseSalaryRange(job.compensation),

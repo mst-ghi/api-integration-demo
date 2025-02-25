@@ -43,7 +43,7 @@ CREATE TABLE "skills" (
 CREATE TABLE "jobs" (
     "id" VARCHAR(64) NOT NULL,
     "code" TEXT NOT NULL,
-    "company_id" VARCHAR(64) NOT NULL,
+    "company_id" VARCHAR(64),
     "salary_id" VARCHAR(64),
     "location_id" VARCHAR(64),
     "provider" TEXT NOT NULL,
@@ -84,7 +84,7 @@ CREATE INDEX "jobs_type_remotely_posted_at_idx" ON "jobs"("type", "remotely", "p
 CREATE INDEX "_job_skill_B_index" ON "_job_skill"("B");
 
 -- AddForeignKey
-ALTER TABLE "jobs" ADD CONSTRAINT "jobs_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "jobs" ADD CONSTRAINT "jobs_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "jobs" ADD CONSTRAINT "jobs_salary_id_fkey" FOREIGN KEY ("salary_id") REFERENCES "salaries"("id") ON DELETE SET NULL ON UPDATE CASCADE;

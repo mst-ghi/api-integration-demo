@@ -39,7 +39,6 @@ export class ProviderOneService {
 
   parser(job: IJobProviderOne): IJobTransformed {
     return {
-      skills: job.skills,
       job: {
         provider: 'provider-one',
         code: job.jobId,
@@ -47,6 +46,7 @@ export class ProviderOneService {
         type: job.details.type,
         posted_at: job.postedDate,
       },
+      skills: job.skills || [],
       company: this.parseCompany(job.company),
       location: this.parseLocation(job.details.location),
       salary: this.parseSalaryRange(job.details.salaryRange),
