@@ -8,7 +8,7 @@ import { IJobProviderOne, IJobTransformed, ProviderContract } from './providers.
 export class ProviderOneService extends ProviderBase implements ProviderContract {
   private readonly logger = new Logger(ProviderOneService.name);
 
-  @Cron(CronExpression.EVERY_30_SECONDS, {
+  @Cron(process.env.PROVIDER_ONE_RUN_TIME || CronExpression.EVERY_30_SECONDS, {
     name: 'provider-one',
     disabled: process.env.PROVIDER_ONE_RUN_STATUS !== 'on',
   })
