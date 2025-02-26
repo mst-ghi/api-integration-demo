@@ -9,7 +9,7 @@ import { IJobProviderTwo, IJobTransformed, ProviderContract } from './providers.
 export class ProviderTwoService extends ProviderBase implements ProviderContract {
   private readonly logger = new Logger(ProviderTwoService.name);
 
-  @Cron(CronExpression.EVERY_30_SECONDS, {
+  @Cron(process.env.PROVIDER_TWO_RUN_TIME || CronExpression.EVERY_30_SECONDS, {
     name: 'provider-two',
     disabled: process.env.PROVIDER_TWO_RUN_STATUS !== 'on',
   })

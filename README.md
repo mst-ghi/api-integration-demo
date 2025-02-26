@@ -25,7 +25,10 @@ REDIS_PORT: redis port value, '6379'
 SWAGGER_RUN_STATUS: swagger running status, 'on' or 'off'
 
 PROVIDER_ONE_RUN_STATUS: provider one running status, 'on' or 'off'
+PROVIDER_ONE_RUN_TIME: provider one frequency time, '*/30 * * * * *'
+
 PROVIDER_TWO_RUN_STATUS: provider two running status, 'on' or 'off'
+PROVIDER_ONE_RUN_TIME: provider two frequency time, '*/30 * * * * *'
 
 DATABASE_URL: database url configuration,  'postgresql://postgres:12345678@localhost:5432/devotel_demo_db?schema=public'
 ```
